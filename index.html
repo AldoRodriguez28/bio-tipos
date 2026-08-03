@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Compás del Temperamento — ¿Cuál es tu temperamento?</title>
+<meta name="description" content="Descubre cuál de los cuatro temperamentos clásicos —colérico, sanguíneo, flemático o melancólico— describe mejor tu forma de reaccionar. Test gratuito de 17 preguntas.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="El Compás del Temperamento — ¿Cuál es tu temperamento?">
+<meta property="og:description" content="17 preguntas para descubrir tu temperamento clásico dominante: colérico, sanguíneo, flemático o melancólico.">
+<!-- TODO: cuando tengas el dominio final, cambia estas dos líneas a URLs absolutas, ej. https://tudominio.com/og-image.png -->
+<meta property="og:image" content="/og-image.png">
+<meta property="og:url" content="/">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="El Compás del Temperamento">
+<meta name="twitter:description" content="Descubre tu temperamento clásico en 17 preguntas.">
+<meta name="twitter:image" content="/og-image.png">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='58' fill='%23ffffff'/%3E%3Cpath d='M60 60 L60 4 A56 56 0 0 1 116 60 Z' fill='%23bf5b42'/%3E%3Cpath d='M60 60 L116 60 A56 56 0 0 1 60 116 Z' fill='%23c99a3e'/%3E%3Cpath d='M60 60 L60 116 A56 56 0 0 1 4 60 Z' fill='%233f7ea6'/%3E%3Cpath d='M60 60 L4 60 A56 56 0 0 1 60 4 Z' fill='%236d7d52'/%3E%3Ccircle cx='60' cy='60' r='10' fill='%23ffffff'/%3E%3Ccircle cx='60' cy='60' r='58' fill='none' stroke='%23e3e7ec' stroke-width='2'/%3E%3C/svg%3E">
+
+<style>
+  :root{
+    --bg: #eef1f4;
+    --bg-card: #ffffff;
+    --ink: #16202b;
+    --ink-dim: #5b6472;
+    --primary: #1568a8;
+    --primary-ink: #ffffff;
+    --fuego: #bf5b42;
+    --aire: #c99a3e;
+    --agua: #3f7ea6;
+    --tierra: #6d7d52;
+    --line: #e3e7ec;
+    --line-strong: #cfd5dc;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --ease: cubic-bezier(.22,.8,.28,1);
+    --focus-ring: 0 0 0 3px rgba(21,104,168,0.35);
+    --shadow-card: 0 1px 2px rgba(16,24,32,0.04), 0 12px 28px -18px rgba(16,24,32,0.16);
+    --font: -apple-system, 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  :focus-visible{outline:none;}
+  ::selection{background:rgba(21,104,168,0.18);}
+  body{
+    background:
+      radial-gradient(circle at 50% -10%, rgba(21,104,168,0.06), transparent 45%),
+      var(--bg);
+    color:var(--ink);
+    font-family: var(--font);
+    min-height:100vh;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:680px;margin:0 auto;}
+
+  .eyebrow{
+    font-family: var(--font);
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-weight:600;
+    font-size:11px;
+    color:var(--primary);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  h1{
+    text-align:center;
+    font-weight:600;
+    font-size:clamp(26px,5vw,38px);
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .sub{
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:15px;
+    max-width:480px;
+    margin:0 auto 36px;
+    line-height:1.55;
+  }
+
+  /* compass emblem: anillo tipo gauge/instrumento clínico */
+  .compass{
+    width:112px;height:112px;margin:0 auto 30px;
+    position:relative;
+  }
+  .compass svg{width:100%;height:100%;display:block;}
+  .compass circle[id^="quad-"]{transition:opacity .5s var(--ease);}
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:32px 28px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow-card);
+    animation:cardIn .5s var(--ease);
+  }
+  @keyframes cardIn{
+    from{opacity:0; transform:translateY(8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* progress */
+  .progress-track{
+    height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:28px;
+  }
+  .progress-fill{
+    height:100%;background:var(--primary);
+    width:0%;transition:width .4s var(--ease);
+  }
+  .q-block{transition:opacity .18s ease, transform .18s ease;}
+  .q-block.q-exit{opacity:0; transform:translateY(-6px);}
+  .q-count{
+    font-family: var(--font);
+    font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--primary);
+    margin-bottom:14px;
+  }
+  .q-text{font-size:19px;font-weight:600;line-height:1.4;margin-bottom:22px;letter-spacing:-0.005em;}
+
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    text-align:left;
+    background:var(--bg-card);
+    border:1px solid var(--line-strong);
+    color:var(--ink);
+    padding:15px 16px;
+    border-radius:var(--radius-sm);
+    font-family: var(--font);
+    font-size:14.5px;
+    line-height:1.4;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .opt:hover{border-color:var(--primary); background:rgba(21,104,168,0.04);}
+  .opt:active{transform:scale(0.995);}
+  .opt:focus-visible{box-shadow:var(--focus-ring); border-color:var(--primary);}
+  .opt.selected{transform:scale(1.005);}
+  .opt:disabled{cursor:default;}
+
+  .nav-row{display:flex;justify-content:space-between;margin-top:22px;}
+  .ghost-btn{
+    background:none;border:none;color:var(--ink-dim);
+    font-family: var(--font);
+    font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.01em;
+    padding:6px 4px;border-radius:6px;
+  }
+  .ghost-btn:hover{color:var(--ink);}
+  .ghost-btn:focus-visible{box-shadow:var(--focus-ring);}
+  .ghost-btn:disabled{opacity:0.35;cursor:default;}
+
+  /* intro */
+  .start-btn{
+    display:block;margin:0 auto;
+    background:var(--primary);color:var(--primary-ink);
+    border:none;padding:14px 32px;border-radius:var(--radius-sm);
+    font-family: var(--font);
+    font-size:14px;font-weight:600;letter-spacing:0.01em;cursor:pointer;
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .start-btn:hover{filter:brightness(0.92);}
+  .start-btn:active{transform:scale(0.98);}
+  .start-btn:focus-visible{box-shadow:var(--focus-ring);}
+  .start-btn:disabled{opacity:0.5;cursor:default;}
+
+  .legend{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    margin:26px 0 6px;
+    font-family: var(--font);
+    font-size:12.5px;color:var(--ink-dim);
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+
+  /* lead gate */
+  .lead-title{font-size:21px;font-weight:600;margin:0 0 8px;letter-spacing:-0.005em;}
+  .lead-sub{
+    color:var(--ink-dim);font-size:13.5px;line-height:1.6;margin-bottom:24px;
+    font-family: var(--font);
+  }
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;font-family: var(--font);
+    font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--ink-dim);
+    margin-bottom:7px;
+  }
+  .field input{
+    width:100%;background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);
+    padding:13px 14px;border-radius:var(--radius-sm);
+    font-family: var(--font);
+    font-size:14.5px;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input::placeholder{color:#9aa3ae;}
+  .field input:hover{border-color:#b7bfc8;}
+  .field input:focus{outline:none;border-color:var(--primary);}
+  .field input:focus-visible{box-shadow:var(--focus-ring);}
+  .field input.invalid{border-color:var(--fuego);}
+  .lead-error{
+    display:none;color:var(--fuego);font-size:12.5px;margin:-8px 0 14px;
+    font-family: var(--font);
+  }
+  .lead-error.show{display:block;}
+  .lead-privacy{
+    font-size:11.5px;color:var(--ink-dim);line-height:1.5;margin-top:16px;text-align:center;
+    font-family: var(--font);
+  }
+
+  /* results */
+  .result-name{
+    text-align:center;font-size:clamp(28px,6vw,40px);margin:6px 0 4px;font-weight:600;letter-spacing:-0.01em;
+  }
+  .result-sub{
+    text-align:center;color:var(--ink-dim);font-family: var(--font);
+    font-size:13px;letter-spacing:0.03em;text-transform:uppercase;font-weight:600;margin-bottom:26px;
+  }
+  .bars{display:flex;flex-direction:column;gap:14px;margin:22px 0 30px;}
+  .bar-row{display:flex;align-items:center;gap:12px;}
+  .bar-label{
+    width:96px;flex:none;font-family: var(--font);
+    font-size:13px;color:var(--ink-dim);text-align:right;
+  }
+  .bar-track{flex:1;background:var(--line);height:10px;border-radius:5px;overflow:hidden;}
+  .bar-fill{height:100%;width:0%;border-radius:5px;transition:width .8s cubic-bezier(.2,.8,.2,1);}
+  .bar-pct{width:38px;flex:none;font-family: var(--font);font-size:12.5px;color:var(--ink-dim);}
+
+  .desc{font-size:16px;line-height:1.65;margin-bottom:16px;color:var(--ink);}
+  .desc strong{color:var(--ink);}
+
+  .trait-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;
+    font-family: var(--font);
+    font-size:13.5px;color:var(--ink-dim);margin:18px 0 6px;
+  }
+  .trait-grid span.hd{color:var(--ink);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:6px;}
+
+  .combo-note{
+    font-family: var(--font);
+    font-size:13.5px;color:var(--ink-dim);line-height:1.6;
+    border-top:1px solid var(--line);padding-top:16px;margin-top:16px;
+  }
+
+  .science-box{
+    margin-top:18px;
+    border-left:3px solid var(--primary);
+    padding:14px 18px;
+    background:rgba(21,104,168,0.05);
+    font-family: var(--font);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--ink-dim);
+    border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .science-box strong{color:var(--ink);}
+
+  .restart-row{text-align:center;margin-top:28px;}
+  .restart-btn{
+    background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);
+    padding:11px 22px;border-radius:var(--radius-sm);
+    font-family: var(--font);
+    font-size:13px;font-weight:600;cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .restart-btn:hover{border-color:var(--primary); background:rgba(21,104,168,0.04);}
+  .restart-btn:focus-visible{box-shadow:var(--focus-ring);}
+
+  .hidden{display:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    .progress-fill,.bar-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="headerBlock">
+    <div class="eyebrow">Evaluación basada en la teoría clásica de los cuatro temperamentos</div>
+    <h1>El Compás del Temperamento</h1>
+    <p class="sub">17 preguntas para estimar cuál de los cuatro temperamentos clásicos —colérico, sanguíneo, flemático o melancólico— describe mejor tu forma habitual de reaccionar y relacionarte.</p>
+
+    <div class="compass" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--line-strong)" stroke-width="13"/>
+        <circle id="quad-colerico" cx="60" cy="60" r="48" fill="none" stroke="var(--fuego)" stroke-width="13" stroke-linecap="round" stroke-dasharray="70 400" transform="rotate(-90 60 60)" opacity="0.85"/>
+        <circle id="quad-sanguineo" cx="60" cy="60" r="48" fill="none" stroke="var(--aire)" stroke-width="13" stroke-linecap="round" stroke-dasharray="70 400" transform="rotate(0 60 60)" opacity="0.85"/>
+        <circle id="quad-flematico" cx="60" cy="60" r="48" fill="none" stroke="var(--agua)" stroke-width="13" stroke-linecap="round" stroke-dasharray="70 400" transform="rotate(90 60 60)" opacity="0.85"/>
+        <circle id="quad-melancolico" cx="60" cy="60" r="48" fill="none" stroke="var(--tierra)" stroke-width="13" stroke-linecap="round" stroke-dasharray="70 400" transform="rotate(180 60 60)" opacity="0.85"/>
+        <circle cx="60" cy="60" r="4" fill="var(--ink-dim)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div id="intro" class="card">
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background:var(--fuego)"></span>Colérico — fuego</div>
+      <div class="legend-item"><span class="dot" style="background:var(--aire)"></span>Sanguíneo — aire</div>
+      <div class="legend-item"><span class="dot" style="background:var(--agua)"></span>Flemático — agua</div>
+      <div class="legend-item"><span class="dot" style="background:var(--tierra)"></span>Melancólico — tierra</div>
+    </div>
+    <p style="font-family:var(--font);font-size:13.5px;color:var(--ink-dim);line-height:1.6;margin-bottom:24px;">
+      Elige en cada pregunta la opción que más se parezca a tu reacción real, no a la que te gustaría tener. No hay respuestas correctas.
+    </p>
+    <button class="start-btn" onclick="startQuiz()">Comenzar evaluación</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="card hidden">
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="17" aria-valuenow="0" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-block" id="qBlock">
+      <div class="q-count" id="qCount" aria-live="polite"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="qOptions"></div>
+    </div>
+    <div class="nav-row">
+      <button class="ghost-btn" id="backBtn" onclick="goBack()">← Anterior</button>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- LEAD GATE -->
+  <div id="leadgate" class="card hidden">
+    <div class="lead-title">Tu resultado está listo</div>
+    <p class="lead-sub">Déjanos tu nombre y correo para mostrártelo y, si quieres, guardarlo para enviártelo después.</p>
+    <form id="leadForm" novalidate>
+      <div class="field">
+        <label for="leadName">Nombre</label>
+        <input type="text" id="leadName" name="leadName" autocomplete="name" placeholder="Tu nombre">
+      </div>
+      <div class="field">
+        <label for="leadEmail">Correo</label>
+        <input type="email" id="leadEmail" name="leadEmail" autocomplete="email" placeholder="tu@correo.com" required>
+      </div>
+      <div class="lead-error" id="leadError">Ingresa un correo válido para continuar.</div>
+      <button type="submit" class="start-btn" id="leadSubmitBtn">Ver mi resultado</button>
+    </form>
+    <p class="lead-privacy">Usamos tu correo únicamente para enviarte tu resultado. No compartimos tus datos con terceros.</p>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" class="card hidden">
+    <div class="eyebrow" id="resultEyebrow">Tu resultado</div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-sub" id="resultSub"></div>
+
+    <div class="bars" id="resultBars"></div>
+
+    <div class="desc" id="resultDesc"></div>
+
+    <div class="trait-grid" id="traitGrid"></div>
+
+    <div class="combo-note" id="comboNote"></div>
+
+    <div class="science-box">
+      <strong>Nota sobre el estatus científico:</strong> la teoría de los cuatro temperamentos viene de la medicina de los cuatro humores de Hipócrates y Galeno (siglo V a.C.–siglo II d.C.) y no tiene respaldo empírico como modelo de personalidad. Es útil como herramienta de autorreflexión y lenguaje común, pero los modelos con evidencia psicométrica actual son el <strong>Big Five (OCEAN)</strong> y, en clínica, dimensiones como neuroticismo, extraversión y afecto negativo/positivo del <strong>PANAS</strong> o el <strong>NEO-PI-R</strong>. Este cuestionario es orientativo, no diagnóstico.
+    </div>
+
+    <div class="restart-row">
+      <button class="restart-btn" onclick="restartQuiz()">Volver a hacer el test</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Pega aquí la URL de tu Google Apps Script Web App (ver instrucciones de despliegue).
+const GAS_WEBHOOK_URL = "PEGA_AQUI_TU_URL_DE_GOOGLE_APPS_SCRIPT";
+
+const TIPOS = {
+  colerico: {
+    nombre: "Colérico",
+    elemento: "fuego",
+    color: "var(--fuego)",
+    sub: "Orientado a la acción y al resultado",
+    desc: "Tiendes a reaccionar con <strong>rapidez y determinación</strong>. Te incomoda la inacción, tomas decisiones con facilidad y sueles asumir el rol de líder sin buscarlo activamente. Tu energía es alta y orientada a metas: prefieres avanzar imperfecto a quedarte planeando. El costo típico es la impaciencia y una tendencia a pasar por encima del proceso —o de la gente— cuando algo te frustra.",
+    traits_pos: ["Decisión rápida","Alta tolerancia al riesgo","Orientación a metas","Liderazgo natural"],
+    traits_watch: ["Impaciencia","Poca escucha bajo presión","Enojo de corta duración","Puede parecer autoritario"]
+  },
+  sanguineo: {
+    nombre: "Sanguíneo",
+    elemento: "aire",
+    color: "var(--aire)",
+    sub: "Orientado a las personas y al estímulo",
+    desc: "Te activas con <strong>el contacto social y la novedad</strong>. Hablas con soltura, te adaptas rápido a gente y contextos nuevos, y tu estado de ánimo tiende a ser optimista y contagioso. Funcionas mejor en movimiento que en rutina. El costo típico es la dispersión: te cuesta más terminar que empezar, y a veces necesitas estructura externa para sostener el foco.",
+    traits_pos: ["Sociabilidad alta","Optimismo","Adaptabilidad","Comunicación expresiva"],
+    traits_watch: ["Dificultad para terminar tareas","Búsqueda constante de estímulo","Distracción fácil","Compromisos poco duraderos"]
+  },
+  flematico: {
+    nombre: "Flemático",
+    elemento: "agua",
+    color: "var(--agua)",
+    sub: "Orientado a la estabilidad y la calma",
+    desc: "Procesas el mundo con <strong>calma y bajo nivel de reactividad emocional</strong>. Evitas el conflicto de forma natural, escuchas más de lo que hablas y sueles ser el punto de equilibrio en un grupo. Rara vez se te ve alterado. El costo típico es la evitación: postergas decisiones difíciles o confrontaciones necesarias con tal de no generar tensión.",
+    traits_pos: ["Estabilidad emocional","Buena escucha","Mediación de conflictos","Consistencia"],
+    traits_watch: ["Evita confrontaciones necesarias","Puede parecer pasivo","Indecisión ante presión externa","Le cuesta pedir lo que necesita"]
+  },
+  melancolico: {
+    nombre: "Melancólico",
+    elemento: "tierra",
+    color: "var(--tierra)",
+    sub: "Orientado al análisis y al detalle",
+    desc: "Tu forma de operar es <strong>reflexiva y minuciosa</strong>. Piensas varias veces antes de actuar, notas detalles que otros pasan por alto y sueles fijarte estándares altos. Tienes una vida interior rica y sensibilidad emocional marcada. El costo típico es la rumiación: el análisis se puede volver parálisis, y la autoexigencia puede derivar en autocrítica excesiva.",
+    traits_pos: ["Pensamiento analítico","Atención al detalle","Creatividad profunda","Sensibilidad emocional"],
+    traits_watch: ["Perfeccionismo paralizante","Tendencia a la autocrítica","Puede sobre-planear","Introversión marcada bajo estrés"]
+  }
+};
+
+const QUESTIONS = [
+  {q:"Cuando surge un problema urgente en el trabajo, tu primer impulso es…",
+   opts:[["Tomar el control y resolverlo ya mismo","colerico"],
+         ["Llamar o hablar con alguien para pensarlo juntos","sanguineo"],
+         ["Esperar un momento y ver cómo se acomoda solo","flematico"],
+         ["Analizar la causa antes de mover un dedo","melancolico"]]},
+  {q:"En una reunión social donde no conoces a casi nadie…",
+   opts:[["Te aburres si no hay algo que decidir o liderar","colerico"],
+         ["Te sientes en tu ambiente y hablas con varias personas","sanguineo"],
+         ["Te quedas cerca de alguien conocido, cómodo observando","flematico"],
+         ["Prefieres una conversación profunda con una sola persona","melancolico"]]},
+  {q:"Cuando alguien te contradice en público…",
+   opts:[["Respondes de inmediato, sin filtro","colerico"],
+         ["Le quitas peso con humor y sigues la charla","sanguineo"],
+         ["Prefieres no discutir ahí mismo","flematico"],
+         ["Te lo llevas a pensar y lo analizas después","melancolico"]]},
+  {q:"Tu escritorio o espacio de trabajo suele estar…",
+   opts:[["Funcional, sin tiempo para ordenarlo","colerico"],
+         ["Con cosas de varios proyectos a la vez","sanguineo"],
+         ["Ordenado de forma simple, sin exceso","flematico"],
+         ["Organizado con un sistema muy definido","melancolico"]]},
+  {q:"Ante un cambio de planes de último momento…",
+   opts:[["Te frustra perder el control de la situación","colerico"],
+         ["Te da igual, hasta te emociona lo improvisado","sanguineo"],
+         ["Te adaptas sin mucho drama","flematico"],
+         ["Te incomoda no haber podido preverlo","melancolico"]]},
+  {q:"Cuando terminas un proyecto importante, sientes…",
+   opts:[["Ya estás pensando en el siguiente reto","colerico"],
+         ["Ganas de celebrarlo con otros","sanguineo"],
+         ["Alivio tranquilo, sin necesidad de mostrarlo","flematico"],
+         ["Necesidad de revisar qué se pudo hacer mejor","melancolico"]]},
+  {q:"En un desacuerdo con un amigo cercano…",
+   opts:[["Vas directo al punto, aunque incomode","colerico"],
+         ["Prefieres hablarlo rápido y hacer las paces","sanguineo"],
+         ["Evitas el tema mientras puedas","flematico"],
+         ["Le das muchas vueltas antes de decir algo","melancolico"]]},
+  {q:"Tu forma de tomar decisiones importantes es…",
+   opts:[["Rápida, confías en tu instinto","colerico"],
+         ["Guiada por cómo te hace sentir en el momento","sanguineo"],
+         ["Lenta pero segura, sin prisa","flematico"],
+         ["Muy analizada, con pros y contras por escrito","melancolico"]]},
+  {q:"Cuando alguien te pide ayuda a último momento…",
+   opts:[["La resuelves rápido y sigues con lo tuyo","colerico"],
+         ["Aceptas encantado, te gusta sentirte útil","sanguineo"],
+         ["Ayudas si puedes, sin mucho aspaviento","flematico"],
+         ["Te preocupas por hacerlo bien, aunque tome tiempo","melancolico"]]},
+  {q:"Lo que más te agota emocionalmente es…",
+   opts:[["Sentir que pierdes el control de algo","colerico"],
+         ["Estar mucho tiempo solo y sin estímulo","sanguineo"],
+         ["El conflicto sostenido o la presión constante","flematico"],
+         ["El desorden, la imperfección o la ambigüedad","melancolico"]]},
+  {q:"En un grupo de trabajo, naturalmente terminas…",
+   opts:[["Dirigiendo o marcando el ritmo","colerico"],
+         ["Animando y conectando a las personas","sanguineo"],
+         ["Manteniendo la calma cuando hay tensión","flematico"],
+         ["Revisando que todo esté bien hecho","melancolico"]]},
+  {q:"Cuando cometes un error, tu reacción típica es…",
+   opts:[["Corregirlo rápido y seguir adelante","colerico"],
+         ["Reírte de ti mismo y no darle tantas vueltas","sanguineo"],
+         ["Aceptarlo con calma, sin dramatizar","flematico"],
+         ["Repasarlo mentalmente varias veces","melancolico"]]},
+  {q:"Tu energía durante el día suele ser…",
+   opts:[["Intensa, con picos de impulso","colerico"],
+         ["Alta y variable según el estímulo social","sanguineo"],
+         ["Estable y pareja, sin grandes subidas","flematico"],
+         ["Más interna, se nota poco por fuera","melancolico"]]},
+  {q:"Si te regalan un fin de semana totalmente libre…",
+   opts:[["Lo llenas de actividad o de un objetivo","colerico"],
+         ["Planeas salir con gente","sanguineo"],
+         ["Descansas sin planear casi nada","flematico"],
+         ["Aprovechas para un proyecto personal o leer","melancolico"]]},
+  {q:"Lo que más valoras en una amistad es…",
+   opts:[["La lealtad y que sea directa contigo","colerico"],
+         ["La diversión y la buena onda","sanguineo"],
+         ["La constancia y la tranquilidad","flematico"],
+         ["La profundidad y la honestidad emocional","melancolico"]]},
+  {q:"Bajo mucha presión, lo primero que se resiente es…",
+   opts:[["Tu paciencia con los demás","colerico"],
+         ["Tu capacidad de concentrarte","sanguineo"],
+         ["Tu iniciativa, te cuesta más moverte","flematico"],
+         ["Tu ánimo, te vuelves más autocrítico","melancolico"]]},
+  {q:"Cuando alguien te felicita en público…",
+   opts:[["Lo agradeces y sigues, no te detienes ahí","colerico"],
+         ["Lo disfrutas abiertamente","sanguineo"],
+         ["Te incomoda un poco la atención","flematico"],
+         ["Dudas si realmente lo mereces","melancolico"]]}
+];
+
+let current = 0;
+let answers = [];
+let scores = {colerico:0, sanguineo:0, flematico:0, melancolico:0};
+
+const ACCENT_BG = {
+  colerico: 'rgba(191,91,66,0.12)',
+  sanguineo: 'rgba(201,154,62,0.12)',
+  flematico: 'rgba(63,126,166,0.12)',
+  melancolico: 'rgba(109,125,82,0.12)'
+};
+
+function updateCompass(){
+  const partial = {colerico:0, sanguineo:0, flematico:0, melancolico:0};
+  answers.forEach(a => { if(a) partial[a]++; });
+  const answered = answers.filter(Boolean).length;
+  const maxVal = Math.max(...Object.values(partial));
+  Object.keys(partial).forEach(key => {
+    const path = document.getElementById(`quad-${key}`);
+    if(!path) return;
+    path.style.opacity = (answered === 0 || partial[key] === 0)
+      ? (answered === 0 ? '0.85' : '0.35')
+      : (partial[key] === maxVal ? '1' : '0.35');
+  });
+}
+
+function startQuiz(){
+  document.getElementById('headerBlock').classList.add('hidden');
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const qBlock = document.getElementById('qBlock');
+  qBlock.classList.add('q-exit');
+
+  setTimeout(() => {
+    const item = QUESTIONS[current];
+    document.getElementById('qCount').textContent = `Pregunta ${current+1} de ${QUESTIONS.length}`;
+    document.getElementById('qText').textContent = item.q;
+    document.getElementById('progressFill').style.width = `${(current/QUESTIONS.length)*100}%`;
+    document.getElementById('progressTrack').setAttribute('aria-valuenow', current);
+    document.getElementById('backBtn').disabled = current === 0;
+
+    const optsWrap = document.getElementById('qOptions');
+    optsWrap.innerHTML = '';
+    item.opts.forEach(([label, tipo]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt';
+      btn.textContent = label;
+      if(answers[current] === tipo){
+        btn.classList.add('selected');
+        btn.style.borderColor = TIPOS[tipo].color;
+        btn.style.background = ACCENT_BG[tipo];
+      }
+      btn.onclick = () => selectAnswer(tipo, btn, optsWrap);
+      optsWrap.appendChild(btn);
+    });
+
+    updateCompass();
+    qBlock.classList.remove('q-exit');
+  }, 140);
+}
+
+function selectAnswer(tipo, btn, optsWrap){
+  answers[current] = tipo;
+
+  Array.from(optsWrap.children).forEach(b => { b.disabled = true; });
+  btn.classList.add('selected');
+  btn.style.borderColor = TIPOS[tipo].color;
+  btn.style.background = ACCENT_BG[tipo];
+  updateCompass();
+
+  setTimeout(() => {
+    current++;
+    if(current < QUESTIONS.length){
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 220);
+}
+
+function goBack(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function finishQuiz(){
+  scores = {colerico:0, sanguineo:0, flematico:0, melancolico:0};
+  answers.forEach(a => scores[a]++);
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('leadgate').classList.remove('hidden');
+  document.getElementById('leadEmail').focus();
+}
+
+function sendLead(name, email){
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const topKey = sorted[0][0];
+  const payload = {
+    nombre: name,
+    email: email,
+    resultado: TIPOS[topKey].nombre,
+    colerico: scores.colerico,
+    sanguineo: scores.sanguineo,
+    flematico: scores.flematico,
+    melancolico: scores.melancolico,
+    fecha: new Date().toISOString()
+  };
+  if(!GAS_WEBHOOK_URL || GAS_WEBHOOK_URL.indexOf('PEGA_AQUI') === 0){
+    console.warn('Configura GAS_WEBHOOK_URL para guardar leads en Google Sheets.');
+    return Promise.resolve();
+  }
+  // no-cors: no podemos leer la respuesta, pero el registro se guarda igual en el Sheet.
+  return fetch(GAS_WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+document.getElementById('leadEmail').addEventListener('input', function(){
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
+  if(emailOk){
+    document.getElementById('leadError').classList.remove('show');
+    this.classList.remove('invalid');
+  }
+});
+
+document.getElementById('leadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('leadName').value.trim();
+  const emailInput = document.getElementById('leadEmail');
+  const email = emailInput.value.trim();
+  const errorEl = document.getElementById('leadError');
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if(!emailOk){
+    errorEl.classList.add('show');
+    emailInput.classList.add('invalid');
+    emailInput.focus();
+    return;
+  }
+  errorEl.classList.remove('show');
+  emailInput.classList.remove('invalid');
+
+  const btn = document.getElementById('leadSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  sendLead(name, email).finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Ver mi resultado';
+    document.getElementById('leadgate').classList.add('hidden');
+    showResult();
+  });
+});
+
+function showResult(){
+  const total = QUESTIONS.length;
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const [topKey, topScore] = sorted[0];
+  const [secondKey, secondScore] = sorted[1];
+  const top = TIPOS[topKey];
+
+  document.getElementById('headerBlock').classList.remove('hidden');
+  document.getElementById('result').classList.remove('hidden');
+
+  document.getElementById('resultName').textContent = top.nombre;
+  document.getElementById('resultName').style.color = top.color;
+  document.getElementById('resultSub').textContent = `${top.sub} · elemento clásico: ${top.elemento}`;
+  document.getElementById('resultDesc').innerHTML = top.desc;
+
+  const barsWrap = document.getElementById('resultBars');
+  barsWrap.innerHTML = '';
+  sorted.forEach(([key, val]) => {
+    const t = TIPOS[key];
+    const pct = Math.round((val/total)*100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label">${t.nombre}</div>
+      <div class="bar-track"><div class="bar-fill" style="background:${t.color}" data-pct="${pct}"></div></div>
+      <div class="bar-pct">${pct}%</div>
+    `;
+    barsWrap.appendChild(row);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(el => {
+      el.style.width = el.getAttribute('data-pct') + '%';
+    });
+  }, 50);
+
+  const traitGrid = document.getElementById('traitGrid');
+  traitGrid.innerHTML = `
+    <div><span class="hd">Fortalezas típicas</span>${top.traits_pos.join(' · ')}</div>
+    <div><span class="hd">Puntos a vigilar</span>${top.traits_watch.join(' · ')}</div>
+  `;
+
+  const second = TIPOS[secondKey];
+  const combo = document.getElementById('comboNote');
+  if(secondScore > 0 && secondScore >= topScore - 2){
+    combo.innerHTML = `La mayoría de las personas es una mezcla de dos temperamentos. Tu segundo perfil más marcado es <strong style="color:${second.color}">${second.nombre}</strong> (${secondScore} de ${total} respuestas), lo que sugiere una combinación <strong>${top.nombre}-${second.nombre}</strong> más que un tipo puro.`;
+  } else {
+    combo.innerHTML = `Tu perfil de <strong style="color:${top.color}">${top.nombre}</strong> es bastante dominante frente al resto de tus respuestas, con poca mezcla marcada de otros temperamentos.`;
+  }
+}
+
+function restartQuiz(){
+  current = 0;
+  answers = [];
+  document.getElementById('headerBlock').classList.remove('hidden');
+  document.getElementById('leadForm').reset();
+  document.getElementById('leadError').classList.remove('show');
+  document.getElementById('leadEmail').classList.remove('invalid');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('intro').classList.remove('hidden');
+  updateCompass();
+}
+</script>
+</body>
+</html>
